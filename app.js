@@ -679,10 +679,15 @@ function setupEventListeners() {
 
     // AI Settings (panel uses closeSettings for cancel)
     document.getElementById('aiCancel').addEventListener('click', closeSettings);
+    document.getElementById('skinCancel').addEventListener('click', closeSettings);
     document.getElementById('aiSave').addEventListener('click', saveAiSettings);
     document.getElementById('aiToggle').addEventListener('change', updateAiStatus);
     document.getElementById('themeLightToggle').addEventListener('change', toggleLightTheme);
     document.getElementById('langSelect').addEventListener('change', changeLanguage);
+
+    // Mobile hamburger menu
+    document.getElementById('hamburgerBtn').addEventListener('click', toggleMobileSidebar);
+    document.getElementById('sidebarOverlay').addEventListener('click', closeMobileSidebar);
 
     // Profile emoji picker
     document.querySelectorAll('#profileEmojiPicker .emoji-option').forEach(option => {
@@ -761,6 +766,21 @@ function renderCarousel() {
         item.addEventListener('click', () => selectCharacter(char.id));
         scroll.appendChild(item);
     });
+}
+
+// === Mobile Sidebar ===
+function toggleMobileSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+}
+
+function closeMobileSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
 }
 
 // === Show/Hide Carousel ===
@@ -859,6 +879,9 @@ function renderCharacters() {
 // === Select Character ===
 function selectCharacter(charId) {
     state.activeCharacter = charId;
+
+    // Close mobile sidebar if open
+    closeMobileSidebar();
 
     // Clear unread for this character
     delete state.unread[charId];
