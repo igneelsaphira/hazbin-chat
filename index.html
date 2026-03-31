@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hazbin Chat - Radio Broadcast</title>
+    <title>ChatBox - Historias Interactivas</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
 </head>
@@ -26,7 +26,7 @@
             <div class="frame-corner left"></div>
             <div class="frame-title">
                 <div class="title-star">&#9733;</div>
-                <h1>HAZBIN CHAT</h1>
+                <h1>CHATBOX</h1>
                 <div class="title-star">&#9733;</div>
             </div>
             <button class="frame-settings-btn" id="btnSettings" title="Configuracion">
@@ -42,7 +42,7 @@
         <!-- Subtitle -->
         <div class="subtitle">
             <span class="radio-icon">&#127911;</span>
-            <p>Bienvenido al Hotel Hazbin &mdash; Transmision en vivo</p>
+            <p>ChatBox &mdash; Historias interactivas</p>
             <span class="blink-rec">&#9679; REC</span>
         </div>
 
@@ -68,8 +68,19 @@
                             <circle cx="11" cy="11" r="8"/>
                             <path d="M21 21l-4.35-4.35"/>
                         </svg>
-                        <input type="text" id="searchInput" placeholder="Buscar personaje...">
+                        <input type="text" id="searchInput" placeholder="Buscar personaje..." data-i18n-placeholder="search">
                         <button class="btn-search-close" id="btnSearchClose" title="Cerrar">&times;</button>
+                    </div>
+                    <!-- Category tags -->
+                    <div class="category-tags">
+                        <span class="category-tag active" data-category="all">Todo</span>
+                        <span class="category-tag" data-category="fantasy">Fantasia</span>
+                        <span class="category-tag" data-category="scifi">Sci-Fi</span>
+                        <span class="category-tag" data-category="mystery">Misterio</span>
+                        <span class="category-tag" data-category="adventure">Aventura</span>
+                        <span class="category-tag" data-category="comedy">Comedia</span>
+                        <span class="category-tag" data-category="horror">Horror</span>
+                        <span class="category-tag" data-category="original">Original</span>
                     </div>
                 </div>
                 <div class="character-list" id="characterList">
@@ -83,7 +94,7 @@
                 <div class="chat-header" id="chatHeader">
                     <div class="chat-header-avatar" id="chatHeaderAvatar">
                         <div class="avatar-placeholder" style="background: linear-gradient(135deg, #2d5a3d, #7c3aed);">
-                            <span id="chatHeaderLetter">?</span>
+                            <span id="chatHeaderEmoji">❓</span>
                         </div>
                     </div>
                     <div class="chat-header-info">
@@ -133,9 +144,17 @@
                                 <div class="ring ring-3"></div>
                             </div>
                         </div>
-                        <h2>Bienvenido al Hotel Hazbin</h2>
-                        <p>Selecciona un personaje para comenzar a chatear.<br>La redencion espera...</p>
+                        <h2>ChatBox</h2>
+                        <p>Selecciona un personaje para comenzar a chatear.<br>Cada conversacion es una historia unica...</p>
                         <div class="welcome-deco">&#9670; &#9670; &#9670;</div>
+                    </div>
+                    <!-- Chats View (show recent conversations when no char selected) -->
+                    <div id="chatsViewContent" style="display:none;"></div>
+                    <!-- Horizontal character carousel (shown on welcome) -->
+                    <div class="carousel-container" id="carouselContainer" style="display:none;">
+                        <div class="carousel-scroll" id="carouselScroll">
+                            <!-- Populated by JS -->
+                        </div>
                     </div>
                 </div>
 
@@ -176,7 +195,7 @@
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
             </button>
-            <span class="modern-bar-label">Hazbin Chat</span>
+            <span class="modern-bar-label">ChatBox</span>
             <button class="modern-bar-btn" id="btnSettingsModern" title="Configuracion">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="3"/>
@@ -196,12 +215,12 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="charName">Nombre</label>
-                    <input type="text" id="charName" placeholder="Ej: Alastor" maxlength="20">
+                    <input type="text" id="charName" placeholder="Ej: Kael" maxlength="20">
                 </div>
                 <div class="form-group">
                     <label>Color del personaje</label>
                     <div class="color-picker" id="colorPicker">
-                        <div class="color-option selected" data-color="#c026d3" style="background: #c026d3;" title="Magenta Alastor"></div>
+                        <div class="color-option selected" data-color="#c026d3" style="background: #c026d3;" title="Magenta"></div>
                         <div class="color-option" data-color="#ef4444" style="background: #ef4444;" title="Rojo"></div>
                         <div class="color-option" data-color="#4ade80" style="background: #4ade80;" title="Verde Esmeralda"></div>
                         <div class="color-option" data-color="#a855f7" style="background: #a855f7;" title="Morado"></div>
@@ -230,7 +249,30 @@
                         <span class="emoji-option" data-emoji="🌙">🌙</span>
                         <span class="emoji-option" data-emoji="⚡">⚡</span>
                         <span class="emoji-option" data-emoji="🔮">🔮</span>
+                        <span class="emoji-option" data-emoji="🧛">🧛</span>
+                        <span class="emoji-option" data-emoji="🚀">🚀</span>
+                        <span class="emoji-option" data-emoji="🧪">🧪</span>
+                        <span class="emoji-option" data-emoji="🌸">🌸</span>
+                        <span class="emoji-option" data-emoji="⚔️">⚔️</span>
+                        <span class="emoji-option" data-emoji="🔍">🔍</span>
+                        <span class="emoji-option" data-emoji="👑">👑</span>
                     </div>
+                </div>
+                <div class="form-group">
+                    <label for="charCategory">Categoria</label>
+                    <select id="charCategory" class="form-select">
+                        <option value="original">Original</option>
+                        <option value="fantasy">Fantasia</option>
+                        <option value="scifi">Sci-Fi</option>
+                        <option value="mystery">Misterio</option>
+                        <option value="adventure">Aventura</option>
+                        <option value="comedy">Comedia</option>
+                        <option value="horror">Horror</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="charPersonality">Personalidad <span style="opacity:0.5; font-size:0.8em;">(opcional, para IA)</span></label>
+                    <textarea id="charPersonality" placeholder="Ej: Sarcastico, inteligente, leal pero con humor negro. Habla con frases cortas y mysterious..." rows="3" maxlength="300"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -380,6 +422,36 @@
                         </div>
                         <div class="ai-info-box">
                             <p>Con la IA activada, los personajes responden de forma inteligente y recuerdan la conversacion. Sin API key, usan respuestas predeterminadas.</p>
+                        </div>
+                        <div class="form-group" style="margin-top:12px;">
+                            <label>Tema claro/oscuro</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="themeLightToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="form-hint">Activa para cambiar a modo claro</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="langSelect">Idioma / Language</label>
+                            <select id="langSelect" class="form-select">
+                                <option value="es">Espanol</option>
+                                <option value="en">English</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Sonido de notificacion</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="soundToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Notificaciones del navegador</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notifToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span class="form-hint" id="notifHint">Activa para recibir alertas cuando la app esta en segundo plano</span>
                         </div>
                     </div>
                     <div class="panel-footer">
